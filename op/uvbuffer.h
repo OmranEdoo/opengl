@@ -11,6 +11,7 @@ private:
     unsigned int m_rendererID;
     unsigned int size;
     unsigned int count;
+
 public:
     UVBuffer(const std::vector<glm::vec2>& data);
     virtual ~UVBuffer();

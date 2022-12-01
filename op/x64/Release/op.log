@@ -1,0 +1,46 @@
+﻿  main.cpp
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(101,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(101,16): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(190,28): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(191,28): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(192,28): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(194,30): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(195,30): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(196,35): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(198,32): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(198,25): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(223,20): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(242,34): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(265,36): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(265,29): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(227,12): warning C4101: 'm_indexID' : variable locale non référencée
+  Génération de code en cours
+  2 of 669 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Fin de la génération du code
+  op.vcxproj -> D:\omran\School\Ing3\opengl\tp\op\x64\Release\op.exe

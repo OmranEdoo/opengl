@@ -1,4 +1,1 @@
-﻿  object.cpp
-D:\omran\School\Ing3\opengl\tp\op\op\object.cpp(13,1): warning C4267: 'initialisation' : conversion de 'size_t' en 'unsigned int', perte possible de données
-D:\omran\School\Ing3\opengl\tp\op\op\object.cpp(23,1): warning C4267: 'initialisation' : conversion de 'size_t' en 'unsigned int', perte possible de données
-  op.vcxproj -> D:\omran\School\Ing3\opengl\tp\op\x64\Debug\op.exe
+﻿LINK : fatal error LNK1168: impossible d'ouvrir D:\omran\School\Ing3\opengl\tp\op\x64\Debug\op.exe pour écrire

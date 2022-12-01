@@ -24,8 +24,8 @@ VertexBuffer::VertexBuffer(const std::vector<glm::vec3>& bufferData, const std::
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, &indexData[0], GL_STATIC_DRAW);
 
-    //std::cout << "bufferSize " << bufferSize << " indexSize " << indexSize << std::endl;  
 }
+
 
 VertexBuffer::~VertexBuffer() {
     (glDeleteBuffers(1, &m_rendererID));

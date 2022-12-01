@@ -32,6 +32,7 @@ public:
     void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
     void setUniform3fv(const std::string& name, const glm::vec3 vector);
     void setUniformMat4f(const std::string& name, const glm::mat4 matrix);
+
 private:
     GLuint LoadShaders(const std::string vertex_file_path, const std::string fragment_file_path);
     std::string m_VertexShaderFilePath;

@@ -5,19 +5,19 @@
 
 LayerRaster::LayerRaster(std::string filePath)
 {
-    this->filePath = filePath;
+    setFilePath(filePath);
     
-    //this->colors = { glm::vec3(0.0f, 0.6f, 0.4f) };
-
     openGeotiff();
 
     // initialisation of width/height/bands
-    this->widthTIFF = getGeotiffSize()[0];
-    this->heightTIFF = getGeotiffSize()[1];
-    this->numberOfBands = getGeotiffSize()[2];
+    setWidthTIFF(getGeotiffSize()[0]);
+    setHeightTIFF(getGeotiffSize()[1]);
+    setNumberOfBands(getGeotiffSize()[2]);
 
     createIndexTable();
     createVerticesVector();
+
+    setVerticesVector(normalizeVector(getVerticesVector(), getMaxZ(), 50));
 }
 
 
@@ -26,79 +26,106 @@ void LayerRaster::openGeotiff()
     /* Connexion to GeoTIFF using GDAL */
 
     GDALAllRegister();
-    this->geotiffData = (GDALDataset*)GDALOpen(this->filePath.c_str(), GA_ReadOnly);
+    setGeotiffData((GDALDataset*)GDALOpen(getFilePath().c_str(), GA_ReadOnly));
+}
+
+
+const std::vector<glm::vec3> LayerRaster::normalizeVector(std::vector<glm::vec3> data, int max, int treshhold) {
+    
+    std::vector<glm::vec3> newData;
+    
+    for (glm::vec3 coordinates : data) {
+
+        int normalizedValue = coordinates[2] / max * treshhold;
+
+        newData.push_back(glm::vec3(coordinates[0], coordinates[1], normalizedValue));
+
+        if (normalizedValue < 40) {
+            pushColors({ 0.0f, 0.0f, 0.0f });
+        }
+        else {
+            pushColors({ 1.0f, 1.0f, 1.0f });
+        }
+    }
+
+    return newData;
 }
 
 
 void LayerRaster::createIndexTable()
 {
     // IndexTable is a table that'll store indexBuffer data associated to dataTIFF to create triangles
-    int tableSize = (8 + (this->widthTIFF + this->heightTIFF - 4 + (this->widthTIFF - 1) * (this->heightTIFF - 1)) * 6) * this->numberOfBands;
+    int tableSize = (8 + (getWidthTIFF() + getHeightTIFF() - 4 + (getWidthTIFF() - 1) * (getHeightTIFF() - 1)) * 6) * getNumberOfBands();
     std::vector<unsigned int> indexTable;
-    std::vector<unsigned int> indexColor;
     // the loop will store each time 6 values of IndexTable for 2 triangles
-    for (int i = 0; i < this->heightTIFF - 1; i++) {
-        for (int j = 0; j < this->widthTIFF; j++) {
+    for (int i = 0; i < getHeightTIFF() - 1; i++) {
+        for (int j = 0; j < getWidthTIFF(); j++) {
             // first triangle
             // point in line i and column j, 6 means each time the values restart from the 7th value and k if there are different raster bands
-            indexTable.push_back( i * this->widthTIFF + j );
+            pushIndexTable( i * getWidthTIFF() + j);
             // point in line i+1 and column j
-            indexTable.push_back( (i + 1) * this->widthTIFF + j );
+            pushIndexTable( (i + 1) * getWidthTIFF() + j );
             // point in line i+1 and column j+1
-            indexTable.push_back( (i + 1) * this->widthTIFF + j + 1);
+            pushIndexTable( (i + 1) * getWidthTIFF() + j + 1);
 
             // second triangle
             // point in line i and column j
-            indexTable.push_back( i * this->widthTIFF + j );
+            pushIndexTable( i * getWidthTIFF() + j );
             // point in line i and column j+1
-            indexTable.push_back( i * this->widthTIFF + j + 1 );
+            pushIndexTable( i * getWidthTIFF() + j + 1 );
             // point in line i+1 and column j+1
-            indexTable.push_back( (i + 1) * this->widthTIFF + j + 1 );
-
-            // Colors
-            indexColor.push_back(0);
-            indexColor.push_back(0);
-            indexColor.push_back(0);
-            indexColor.push_back(0);
-            indexColor.push_back(0);
-            indexColor.push_back(0);
+            pushIndexTable( (i + 1) * getWidthTIFF() + j + 1 );
         }
     }
 
-    this->indexTable = indexTable;
-    this->indexColor = indexColor;
+    //setIndexTable(indexTable);
 }
 
 
 void LayerRaster::createVerticesVector() {
     // result defines a list of GeoTIFF pixel data
     // new float[this->widthTIFF * this->heightTIFF * this->numberOfBands];
-    GDALRasterBand* rasterBand = this->geotiffData->GetRasterBand(1);
+    GDALRasterBand* rasterBand = getGeotiffData()->GetRasterBand(1);
 
     float* pafScanline;
-    pafScanline = (float*)CPLMalloc(sizeof(float) * this->widthTIFF * this->heightTIFF);
+    pafScanline = (float*)CPLMalloc(sizeof(float) * getWidthTIFF() * getHeightTIFF());
 
-    this->maxZ = 0;
+    setMaxZ(0);
 
     // RasterIO function browse the raster bands and store the data in the pafscanline
-    if (rasterBand->RasterIO(GF_Read, 0, 0, this->widthTIFF, this->heightTIFF, pafScanline, this->widthTIFF, this->heightTIFF, GDT_Float32, 0, 0) == CE_None) {
+    if (rasterBand->RasterIO(GF_Read, 0, 0, getWidthTIFF(), getHeightTIFF(), pafScanline, getWidthTIFF(), getHeightTIFF(), GDT_Float32, 0, 0) == CE_None) {
         // Construct a height map based on the xres and yres for each group of four dots
-        for (int i = 0; i < this->heightTIFF; i++)
+        for (int i = 0; i < getHeightTIFF(); i++)
         {
-            for (int j = 0; j < this->widthTIFF; j++)
+            for (int j = 0; j < getWidthTIFF(); j++)
             {
-                if (pafScanline[i * this->widthTIFF + j] > 0) {
-                    this->verticesVector.push_back({ i, j, pafScanline[i * this->widthTIFF + j] });
-                    this->colors.push_back(glm::vec3(0.0f, 0.6f, 0.4f));
+                int value = pafScanline[i * getWidthTIFF() + j];
 
-                    if (this->maxZ < pafScanline[i * this->widthTIFF + j]) {
-                        this->maxZ = pafScanline[i * this->widthTIFF + j];
-                        this->maxX = i;
-                        this->maxY = j;
+                if (value > 0) {
+
+                    pushVerticesVector({ j, i, value });
+                    
+                    if (j % 2 == 0 && i % 2 == 0) {
+                        pushUvVector({0, 1});
+                    }
+                    else if (j % 2 == 0 && i % 2 == 1) {
+                        pushUvVector({0, 0});
+                    }
+                    else if (j % 2 == 1 && i % 2 == 0) {
+                        pushUvVector({1, 1});
+                    }
+                    else {
+                        pushUvVector({1, 0});
+                    }
+
+                    if (getMaxZ() < value) {
+                        setMaxZ(value);
+                        setMaxX(j);
+                        setMaxY(i);
                     }
                 }
                 else // values can not be negative
-                    this->verticesVector.push_back({ i, j, 0 });
+                    pushVerticesVector({ i, j, 0 });
             }
         }
     }
@@ -112,7 +139,7 @@ void LayerRaster::createVerticesVector() {
 
 int* LayerRaster::getGeotiffSize()
 {
-    if (this->geotiffData == NULL)
+    if (getGeotiffData() == NULL)
     {
         std::cout << "Fail to open the GeoTIFF" << std::endl;
         return NULL;
@@ -120,10 +147,10 @@ int* LayerRaster::getGeotiffSize()
 
     int* dataArray = new int[3];
     // Dimensions
-    dataArray[0] = this->geotiffData->GetRasterXSize();
-    dataArray[1] = this->geotiffData->GetRasterYSize();
+    dataArray[0] = getGeotiffData()->GetRasterXSize();
+    dataArray[1] = getGeotiffData()->GetRasterYSize();
     // Nb of Bands
-    dataArray[2] = this->geotiffData->GetRasterCount();
+    dataArray[2] = getGeotiffData()->GetRasterCount();
 
     return dataArray;
 }
@@ -133,7 +160,7 @@ float* LayerRaster::getGeotiffOrigin()
 {
     double adfGeoTransform[6];
 
-    if (this->geotiffData->GetGeoTransform(adfGeoTransform) != CE_None)
+    if (getGeotiffData()->GetGeoTransform(adfGeoTransform) != CE_None)
     {
         return NULL;
     }
@@ -151,7 +178,7 @@ float* LayerRaster::getPixelSize()
 {
     double adfGeoTransform[6];
 
-    if (this->geotiffData->GetGeoTransform(adfGeoTransform) != CE_None)
+    if (getGeotiffData()->GetGeoTransform(adfGeoTransform) != CE_None)
     {
         return NULL;
     }
@@ -167,12 +194,12 @@ float* LayerRaster::getPixelSize()
 
 const char* LayerRaster::getGeotiffProjection()
 {
-    if (this->geotiffData == NULL)
+    if (getGeotiffData() == NULL)
     {
         std::cout << "Fail to open the GeoTIFF" << std::endl;
         return 0;
     }
-    const char* projection = this->geotiffData->GetProjectionRef();
+    const char* projection = getGeotiffData()->GetProjectionRef();
 
     return projection;
 }

@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="colorbuffer.cpp" />
     <ClCompile Include="controls.cpp" />
     <ClCompile Include="fpscontrols.cpp" />
     <ClCompile Include="layerraster.cpp" />
@@ -136,19 +137,24 @@
     <ClCompile Include="object.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="trajectory.cpp" />
+    <ClCompile Include="texture.cpp" />
     <ClCompile Include="uvbuffer.cpp" />
     <ClCompile Include="vertexarray.cpp" />
     <ClCompile Include="vertexbuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="colorbuffer.h" />
     <ClInclude Include="controls.h" />
     <ClInclude Include="fpscontrols.h" />
+    <ClInclude Include="texture.h" />
     <ClInclude Include="layerraster.h" />
     <ClInclude Include="navigationcontrols.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="trajectory.h" />
     <ClInclude Include="uvbuffer.h" />
     <ClInclude Include="vertexarray.h" />
     <ClInclude Include="vertexbuffer.h" />

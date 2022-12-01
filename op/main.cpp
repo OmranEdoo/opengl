@@ -12,6 +12,9 @@
 #include "camera.h"
 #include "navigationcontrols.h"
 #include "layerraster.h"
+#include "trajectory.h"
+
+#include <cmath>
 
 
 
@@ -113,7 +116,18 @@ int main()
         glm::vec3( 1.0f, -1.0f,  1.0f),  //5
         glm::vec3( 1.0f, -1.0f, -1.0f),  //6
         glm::vec3( 1.0f,  1.0f,  1.0f)   //7
-        };
+    };
+
+    vector<glm::vec3> colors = {
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f)
+    };
 
     vector<unsigned int> bufferIndexData = {
         2, 3, 4,
@@ -130,20 +144,7 @@ int main()
         4, 6, 0
     };
 
-    std::vector<glm::vec3> colors = {
-        glm::vec3(0.5f, 0.0f, 0.4f),
-        glm::vec3(1.0f,  0.0f,  0.8f),
-        glm::vec3(0.5f, 0.0f, 0.4f),
-        glm::vec3(1.0f,  0.0f,  0.8f),
-        glm::vec3(0.5f, 0.0f, 0.4f),
-        glm::vec3(1.0f,  0.0f,  0.8f),
-        glm::vec3(0.5f, 0.0f, 0.4f),
-        glm::vec3(1.0f,  0.0f,  0.8f)
-    };
-
-    std::vector<unsigned int> indexsColor(36, 1);
-
-    /*
+    
     vector<glm::vec2> g_uv_buffer_data = {
         glm::vec2(0.000059f, 1.0f - 0.000004f),
         glm::vec2(0.000103f, 1.0f - 0.336048f),
@@ -181,23 +182,29 @@ int main()
         glm::vec2(0.667969f, 1.0f - 0.671889f),
         glm::vec2(1.000004f, 1.0f - 0.671847f),
         glm::vec2(0.667979f, 1.0f - 0.335851f)
-    };*/
+    };
 
-    Object o(g_vertex_buffer_data, bufferIndexData, colors, indexsColor, "D:/omran/School/Ing3/opengl/tp/OpenGL_TP/OpenGL_TP/src/textures/roche.jpg");
+    std::cout << "0" << std::endl;
 
-    std::string mntFilePath = "C:/Users/omran/Downloads/mntTest2.tiff";
+
+    Object o(g_vertex_buffer_data, bufferIndexData, g_uv_buffer_data, colors, "D:/omran/School/Ing3/opengl/tp/op/op/textures/t0010_0.png");
+
+    std::cout << "1" << std::endl;
+
+    std::string mntFilePath = "C:/Users/omran/Downloads/SantaMonicaMountains.png";
     LayerRaster mntLayer(mntFilePath);
-    Object mnt(mntLayer.verticesVector, mntLayer.indexTable, mntLayer.colors, mntLayer.indexColor, "D:/omran/School/Ing3/opengl/tp/OpenGL_TP/OpenGL_TP/src/textures/roche.jpg");
 
+
+    Object mnt(mntLayer.getVerticesVector(), mntLayer.getIndexTable(), mntLayer.getUvVector(), mntLayer.getColors(), "D:/omran/School/Ing3/opengl/tp/op/op/textures/47056.jpg");
+
+    std::cout << "3" << std::endl;
     /////////////////////////Cr�ation de la matrice MVP/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    o.setPosition({ mntLayer.getMaxX(), mntLayer.getMaxY(), mntLayer.getVerticesVector()[mntLayer.getMaxX() + mntLayer.getMaxY()*mntLayer.getWidthTIFF()][2] + 1 });
 
-    o.position.x = mntLayer.maxX;
-    o.position.y = mntLayer.maxY;
-    o.position.z = mntLayer.maxZ;
+    cam.setPosition({ mntLayer.getMaxX(), mntLayer.getMaxY() - 70, mntLayer.getVerticesVector()[mntLayer.getMaxX() + mntLayer.getMaxY() * mntLayer.getWidthTIFF()][2] + 5 });
 
-    cam.position.x = mntLayer.maxX;
-    cam.position.y = mntLayer.maxY;
-    cam.position.z = mntLayer.maxZ+5;
+    cam.setVerticalAngle(1.5);
 
     cam.computeMatrices(width, height);
     glm::mat4 m = o.getModelMatrix();
@@ -227,6 +234,11 @@ int main()
     float lastTime = glfwGetTime();
     float currentTime, deltaTime;
 
+    float alpha = 0;
+
+    Trajectory trajectory;
+
+
     while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window)) {
 
         ////////////////On commence par vider les buffers///////////////
@@ -236,8 +248,35 @@ int main()
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        o.rotationAngles.y = currentTime;
+        alpha += 0.01;
+
+        o.setPosition(trajectory.computePositions(40, alpha, mntLayer));
+
         controls.update(deltaTime, &shader);
+
+        if (controls.getMode()) {
+            cam.setPosition(trajectory.computePositions(40, alpha - 0.3, mntLayer));
+            cam.setPositionObject(o.getPosition());
+        }
+
+        int camX = cam.getPosition()[0]; 
+        int camY = cam.getPosition()[1];
+        int camZ = cam.getPosition()[2];
+
+        if (camZ <= mntLayer.getVerticesVector()[camX + camY * mntLayer.getWidthTIFF()][2])
+            cam.setPosition({ camX, camY, mntLayer.getVerticesVector()[camX + camY * mntLayer.getWidthTIFF()][2]});
+
+        cam.computeMatrices(width, height);
+        m = mnt.getModelMatrix();
+        v = cam.getViewMatrix();
+        p = cam.getProjectionMatrix();
+
+        mvp = p * v * m;
+        shader.setUniformMat4f("MVP", mvp);
+
+        renderer.Draw(va, mnt, shader);
+
+        mnt.Unbind();
 
         m = o.getModelMatrix();
         v = cam.getViewMatrix();
@@ -247,20 +286,8 @@ int main()
         shader.setUniformMat4f("MVP", mvp);
 
         renderer.Draw(va, o, shader);
-        o.Unbind();
 
-        // On passe au mnt
-        
-        cam.computeMatrices(width, height);
-        m = mnt.getModelMatrix();
-        v = cam.getViewMatrix();
-        p = cam.getProjectionMatrix();
-
-        mvp = p * v * m;
-        shader.setUniformMat4f("MVP", mvp);
-        
-        renderer.Draw(va, mnt, shader);
-        mnt.Unbind();
+        o.Unbind();       
 
         ////////////////Partie rafraichissement de l'image et des �v�nements///////////////
         //Swap buffers : frame refresh
@@ -269,8 +296,6 @@ int main()
         glfwPollEvents();
     }
     glfwTerminate();
-
-
 
 
     return 0;
