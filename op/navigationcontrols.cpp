@@ -1,7 +1,7 @@
 #include "navigationcontrols.h"
 //#include "imgui/imgui.h"
 
-NavigationControls::NavigationControls(GLFWwindow* window, Camera* camera) :Controls(window, camera), lastPosCursor(-1, -1), mode(false)
+NavigationControls::NavigationControls(GLFWwindow* window, Camera* camera, Object* object) : Controls(window, camera, object), lastPosCursor(-1, -1), mode(1)
 {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     mouseSpeed = 0.02;
@@ -19,6 +19,7 @@ void NavigationControls::update(float deltaTime, Shader* shader)
         glfwGetCursorPos(m_Window, &xpos, &ypos);
         if (state == GLFW_PRESS) {
             if (lastPosCursor.x != -1) {
+                //m_Camera->setPositionObject({ lastPosCursor.x, lastPosCursor.y, 0 });
                 m_Camera->setHorizontalAngle(m_Camera->getHorizontalAngle() + mouseSpeed * deltaTime * float(xpos - lastPosCursor.x));
                 m_Camera->setVerticalAngle(m_Camera->getVerticalAngle() + mouseSpeed * deltaTime * float(ypos - lastPosCursor.y));
             }
@@ -46,54 +47,112 @@ void NavigationControls::update(float deltaTime, Shader* shader)
         // Up vector : perpendicular to both direction and right
         glm::vec3 up = glm::cross(right, direction);
 
+        if (glfwGetKey(m_Window, GLFW_KEY_1) == GLFW_PRESS) {
+            if (getMode() != 1)
+                setMode(1);
+        }
+        if (glfwGetKey(m_Window, GLFW_KEY_2) == GLFW_PRESS) {
+            if (getMode() != 2)
+                setMode(2);
+        }
+        if (glfwGetKey(m_Window, GLFW_KEY_3) == GLFW_PRESS) {
+            if (getMode() != 3)
+                setMode(3);
+        }
+        if (getMode() == 1) {
+            // Move forward
+            if (glfwGetKey(m_Window, GLFW_KEY_UP) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() + direction * deltaTime * speed);
+            }
+            // Move backward
+            if (glfwGetKey(m_Window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() - direction * deltaTime * speed);
+            }
+            // Strafe right
+            if (glfwGetKey(m_Window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() + right * deltaTime * speed);
+            }
+            // Strafe left
+            if (glfwGetKey(m_Window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() - right * deltaTime * speed);
+            }
+            // Move forward
+            if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() + direction * deltaTime * speed);
+            }
+            // Move backward
+            if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() - direction * deltaTime * speed);
+            }
+            // Strafe right
+            if (glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() + right * deltaTime * speed);
+            }
+            // Strafe left
+            if (glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() - right * deltaTime * speed);
+            }
+            // go up
+            if (glfwGetKey(m_Window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() + up * deltaTime * speed);
+            }
+            // go down
+            if (glfwGetKey(m_Window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+                m_Camera->setPosition(m_Camera->getPosition() - up * deltaTime * speed);
+            }
+        }
 
-        //
-        if (glfwGetKey(m_Window, GLFW_KEY_ENTER) == GLFW_PRESS) {
-            if (getMode())
-                setMode(false);
-            else
-                setMode(true);
-        }
-        // Move forward
-        if (glfwGetKey(m_Window, GLFW_KEY_UP) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() - direction * deltaTime * speed);
-        }
-        // Move backward
-        if (glfwGetKey(m_Window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() + direction * deltaTime * speed);
-        }
-        // Strafe right
-        if (glfwGetKey(m_Window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() - right * deltaTime * speed);
-        }
-        // Strafe left
-        if (glfwGetKey(m_Window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() + right * deltaTime * speed);
-        }
-        // Move forward
-        if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() - direction * deltaTime * speed);
-        }
-        // Move backward
-        if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() + direction * deltaTime * speed);
-        }
-        // Strafe right
-        if (glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() - right * deltaTime * speed);
-        }
-        // Strafe left
-        if (glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() + right * deltaTime * speed);
-        }
-        // go up
-        if (glfwGetKey(m_Window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() + up * deltaTime * speed);
-        }
-        // go down
-        if (glfwGetKey(m_Window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-            m_Camera->setPosition(m_Camera->getPosition() - up * deltaTime * speed);
+        if (getMode() == 3) {
+            // Move forward
+            if (glfwGetKey(m_Window, GLFW_KEY_UP) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() + direction * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() + direction * deltaTime * speed);
+            }
+            // Move backward
+            if (glfwGetKey(m_Window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() - direction * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() - direction * deltaTime * speed);
+            }
+            // Strafe right
+            if (glfwGetKey(m_Window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() + right * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() + right * deltaTime * speed);
+            }
+            // Strafe left
+            if (glfwGetKey(m_Window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() - right * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() - right * deltaTime * speed);
+            }
+            // Move forward
+            if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() + direction * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() + direction * deltaTime * speed);
+            }
+            // Move backward
+            if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() - direction * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() - direction * deltaTime * speed);
+            }
+            // Strafe right
+            if (glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() + right * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() + right * deltaTime * speed);
+            }
+            // Strafe left
+            if (glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() - right * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() - right * deltaTime * speed);
+            }
+            // go up
+            if (glfwGetKey(m_Window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() + up * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() + up * deltaTime * speed);
+            }
+            // go down
+            if (glfwGetKey(m_Window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+                m_Object->setPosition(m_Object->getPosition() - up * deltaTime * speed);
+                m_Camera->setPosition(m_Camera->getPosition() - up * deltaTime * speed);
+            }
         }
     }
-
 }

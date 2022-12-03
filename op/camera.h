@@ -12,9 +12,12 @@ public:
     void computeMatrices(float width, float height);
 
     const glm::mat4& getViewMatrix() const;
+    void setViewMatrix(glm::mat4 viewMatrix) { this->viewMatrix = viewMatrix; };// const;
     const glm::mat4& getProjectionMatrix() const;
 
     void Bind(Shader* shader);
+
+    void lookAtCube();
 
     glm::vec3 getPosition() { return this->position; };
     glm::vec3 getPositionObject() { return this->positionObject; };

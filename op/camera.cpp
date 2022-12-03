@@ -31,7 +31,7 @@ void Camera::computeMatrices(float width, float height)
     // Camera matrix
     viewMatrix = glm::lookAt(
         getPosition(),           // Camera is here
-        getPositionObject(), // and looks here : at the same position, plus "direction"
+        getPosition()+direction, // and looks here : at the same position, plus "direction"
         up                  // Head is up (set to 0,-1,0 to look upside-down)
     );
 
@@ -52,4 +52,11 @@ void Camera::Bind(Shader* shader)
     shader->setUniform3fv("camPosition", getPosition());
 }
 
+void Camera::lookAtCube() {
+    setViewMatrix( glm::lookAt(
+        getPosition(),
+        getPositionObject(),
+        glm::vec3(0,0,1)
+    ) );
+}
 

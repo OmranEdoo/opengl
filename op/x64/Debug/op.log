@@ -1,1 +1,27 @@
-﻿LINK : fatal error LNK1168: impossible d'ouvrir D:\omran\School\Ing3\opengl\tp\op\x64\Debug\op.exe pour écrire
+﻿  main.cpp
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(104,23): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(104,16): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(205,32): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(205,25): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(230,20): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(244,34): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(248,22): warning C4305: '+=' : troncation de 'double' à 'float'
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(254,67): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(265,40): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(265,33): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(272,18): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(273,18): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(274,18): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+  op.vcxproj -> D:\omran\School\Ing3\opengl\tp\op\x64\Debug\op.exe

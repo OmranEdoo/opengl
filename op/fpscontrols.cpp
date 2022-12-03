@@ -1,6 +1,6 @@
 #include "fpscontrols.h"
 
-FPSControls::FPSControls(GLFWwindow* window, Camera* camera) :Controls(window, camera)
+FPSControls::FPSControls(GLFWwindow* window, Camera* camera, Object* object) :Controls(window, camera, object)
 {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }

@@ -6,7 +6,7 @@
 class FPSControls : public Controls
 {
 public:
-    FPSControls(GLFWwindow* window, Camera* camera);
+    FPSControls(GLFWwindow* window, Camera* camera, Object* object);
     void update(float deltaTime, Shader* shader);
 };
 

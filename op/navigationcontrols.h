@@ -2,18 +2,20 @@
 #define NAVIGATIONCONTROLS_H
 
 #include "controls.h"
+#include "object.h"
+
 
 class NavigationControls : public Controls
 {
 public:
-    NavigationControls(GLFWwindow* window, Camera* camera);
+    NavigationControls(GLFWwindow* window, Camera* camera, Object* object);
     void update(float deltaTime, Shader* shader);
-    bool getMode() { return this->mode; };
-    void setMode(bool mode) { this->mode = mode; };
+    int getMode() { return this->mode; };
+    void setMode(int mode) { this->mode = mode; };
 
 private:
     glm::vec2 lastPosCursor;
-    bool mode;
+    int mode;
 };
 
 #endif // NAVIGATIONCONTROLS_H

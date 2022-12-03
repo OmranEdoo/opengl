@@ -102,7 +102,6 @@ int main()
     /////////////////////////On cr�e la camera et les contr�les/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     Camera cam(width, height);
-    NavigationControls controls(window, &cam);
 
     /////////////////////////Cr�ation des formes � afficher/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -119,14 +118,14 @@ int main()
     };
 
     vector<glm::vec3> colors = {
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f)
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f)
     };
 
     vector<unsigned int> bufferIndexData = {
@@ -144,7 +143,7 @@ int main()
         4, 6, 0
     };
 
-    
+    // Comme j'utilise les indexBuffer je pense que je dois modifier mon g_uv_buffer_data afin de texturer correctement mon cube mais je n'ai pas trouvé la manière correcte de la faire, j'ai compris pour le mnt mais pas pour le cube
     vector<glm::vec2> g_uv_buffer_data = {
         glm::vec2(0.000059f, 1.0f - 0.000004f),
         glm::vec2(0.000103f, 1.0f - 0.336048f),
@@ -184,26 +183,23 @@ int main()
         glm::vec2(0.667979f, 1.0f - 0.335851f)
     };
 
-    std::cout << "0" << std::endl;
 
+    Object o(g_vertex_buffer_data, bufferIndexData, g_uv_buffer_data, colors, "C:/Users/omran/Downloads/t0010_0.png");
 
-    Object o(g_vertex_buffer_data, bufferIndexData, g_uv_buffer_data, colors, "D:/omran/School/Ing3/opengl/tp/op/op/textures/t0010_0.png");
-
-    std::cout << "1" << std::endl;
+    NavigationControls controls(window, &cam, &o);
 
     std::string mntFilePath = "C:/Users/omran/Downloads/SantaMonicaMountains.png";
     LayerRaster mntLayer(mntFilePath);
 
+    
+    Object mnt(mntLayer.getVerticesVector(), mntLayer.getIndexTable(), mntLayer.getUvVector(), mntLayer.getColors(), "C:/Users/omran/Downloads/mountain.jpg");
 
-    Object mnt(mntLayer.getVerticesVector(), mntLayer.getIndexTable(), mntLayer.getUvVector(), mntLayer.getColors(), "D:/omran/School/Ing3/opengl/tp/op/op/textures/47056.jpg");
-
-    std::cout << "3" << std::endl;
     /////////////////////////Cr�ation de la matrice MVP/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     o.setPosition({ mntLayer.getMaxX(), mntLayer.getMaxY(), mntLayer.getVerticesVector()[mntLayer.getMaxX() + mntLayer.getMaxY()*mntLayer.getWidthTIFF()][2] + 1 });
 
     cam.setPosition({ mntLayer.getMaxX(), mntLayer.getMaxY() - 70, mntLayer.getVerticesVector()[mntLayer.getMaxX() + mntLayer.getMaxY() * mntLayer.getWidthTIFF()][2] + 5 });
-
+    
     cam.setVerticalAngle(1.5);
 
     cam.computeMatrices(width, height);
@@ -238,6 +234,7 @@ int main()
 
     Trajectory trajectory;
 
+    glm::vec3 lastCamPos = cam.getPosition();
 
     while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window)) {
 
@@ -249,27 +246,36 @@ int main()
         lastTime = currentTime;
 
         alpha += 0.01;
-
-        o.setPosition(trajectory.computePositions(40, alpha, mntLayer));
-
+        
         controls.update(deltaTime, &shader);
 
-        if (controls.getMode()) {
+        if (controls.getMode() == 2) {
+            o.setPosition(trajectory.computePositions(40, alpha, mntLayer));
             cam.setPosition(trajectory.computePositions(40, alpha - 0.3, mntLayer));
             cam.setPositionObject(o.getPosition());
+            cam.lookAtCube();
+        }
+        else if (controls.getMode() == 3){
+            cam.setPosition(o.getPosition() + glm::vec3(10, 10, 0));
+            cam.setPositionObject(o.getPosition());
+            cam.lookAtCube();
+        } 
+        else {
+            o.setPosition(trajectory.computePositions(40, alpha, mntLayer));
+            cam.computeMatrices(width, height);
         }
 
-        int camX = cam.getPosition()[0]; 
-        int camY = cam.getPosition()[1];
-        int camZ = cam.getPosition()[2];
-
-        if (camZ <= mntLayer.getVerticesVector()[camX + camY * mntLayer.getWidthTIFF()][2])
-            cam.setPosition({ camX, camY, mntLayer.getVerticesVector()[camX + camY * mntLayer.getWidthTIFF()][2]});
-
-        cam.computeMatrices(width, height);
         m = mnt.getModelMatrix();
         v = cam.getViewMatrix();
         p = cam.getProjectionMatrix();
+
+        int camX = cam.getPosition()[0];
+        int camY = cam.getPosition()[1];
+        int camZ = cam.getPosition()[2];
+
+
+        if (camZ <= mntLayer.getVerticesVector()[camX + camY * mntLayer.getWidthTIFF()][2] + 1 || camX <= 0 || camY <= 0 || camX >= mntLayer.getWidthTIFF() || camY >= mntLayer.getHeightTIFF())
+            cam.setPosition(lastCamPos);
 
         mvp = p * v * m;
         shader.setUniformMat4f("MVP", mvp);
@@ -277,7 +283,7 @@ int main()
         renderer.Draw(va, mnt, shader);
 
         mnt.Unbind();
-
+        
         m = o.getModelMatrix();
         v = cam.getViewMatrix();
         p = cam.getProjectionMatrix();
@@ -288,6 +294,8 @@ int main()
         renderer.Draw(va, o, shader);
 
         o.Unbind();       
+
+        lastCamPos = cam.getPosition();
 
         ////////////////Partie rafraichissement de l'image et des �v�nements///////////////
         //Swap buffers : frame refresh

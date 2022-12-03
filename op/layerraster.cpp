@@ -1,6 +1,7 @@
 #include "layerraster.h"
 #include <iostream>
 #include "cpl_conv.h" // for CPLMalloc()
+#include <stdlib.h>
 
 
 LayerRaster::LayerRaster(std::string filePath)
@@ -40,11 +41,17 @@ const std::vector<glm::vec3> LayerRaster::normalizeVector(std::vector<glm::vec3>
 
         newData.push_back(glm::vec3(coordinates[0], coordinates[1], normalizedValue));
 
-        if (normalizedValue < 40) {
-            pushColors({ 0.0f, 0.0f, 0.0f });
+        int snowTreshhold = rand() % 6 + 40;
+        int rockTreshhold = rand() % 10 + 32;
+
+        if (normalizedValue > snowTreshhold) {
+            pushColors({ 0.9f, 0.9f, 0.9f });
+        }
+        else if (normalizedValue > rockTreshhold) {
+            pushColors({ 0.6f, 0.3f, 0.3f });
         }
         else {
-            pushColors({ 1.0f, 1.0f, 1.0f });
+            pushColors({ 0.1f, 0.1f, 0.1f });
         }
     }
 
@@ -101,31 +108,15 @@ void LayerRaster::createVerticesVector() {
             {
                 int value = pafScanline[i * getWidthTIFF() + j];
 
-                if (value > 0) {
-
                     pushVerticesVector({ j, i, value });
-                    
-                    if (j % 2 == 0 && i % 2 == 0) {
-                        pushUvVector({0, 1});
-                    }
-                    else if (j % 2 == 0 && i % 2 == 1) {
-                        pushUvVector({0, 0});
-                    }
-                    else if (j % 2 == 1 && i % 2 == 0) {
-                        pushUvVector({1, 1});
-                    }
-                    else {
-                        pushUvVector({1, 0});
-                    }
+
+                    pushUvVector({(float)j/(getWidthTIFF()-1), (getHeightTIFF()-1 - (float)i) / (getHeightTIFF()-1)});
 
                     if (getMaxZ() < value) {
                         setMaxZ(value);
                         setMaxX(j);
                         setMaxY(i);
                     }
-                }
-                else // values can not be negative
-                    pushVerticesVector({ i, j, 0 });
             }
         }
     }
