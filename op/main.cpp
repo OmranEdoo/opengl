@@ -184,15 +184,15 @@ int main()
     };
 
 
-    Object o(g_vertex_buffer_data, bufferIndexData, g_uv_buffer_data, colors, "C:/Users/omran/Downloads/t0010_0.png");
+    Object o(g_vertex_buffer_data, bufferIndexData, g_uv_buffer_data, colors, "textures/t0010_0.png");
 
     NavigationControls controls(window, &cam, &o);
 
-    std::string mntFilePath = "C:/Users/omran/Downloads/SantaMonicaMountains.png";
+    std::string mntFilePath = "SantaMonicaMountains.png";
     LayerRaster mntLayer(mntFilePath);
 
     
-    Object mnt(mntLayer.getVerticesVector(), mntLayer.getIndexTable(), mntLayer.getUvVector(), mntLayer.getColors(), "C:/Users/omran/Downloads/mountain.jpg");
+    Object mnt(mntLayer.getVerticesVector(), mntLayer.getIndexTable(), mntLayer.getUvVector(), mntLayer.getColors(), "textures/mountain.jpg");
 
     /////////////////////////Cr�ation de la matrice MVP/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
