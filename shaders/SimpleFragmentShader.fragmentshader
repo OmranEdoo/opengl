@@ -11,6 +11,6 @@ uniform sampler2D myTextureSampler;
 void main(){
 	//color = vec4(0.0, 0.0, 0.0, 1.0);    
 	//color = vec4(texture(myTextureSampler,UV).rgb, 1.0);
-	color = (2*vec4(texture(myTextureSampler,UV).rgb, 1.0)+vec4(fragmentColor, 0.0))/3;
-      //colorvs = vec4(fragmentColor, 1.0);
+	color = (2*vec4(texture(myTextureSampler,UV).rgb, 1.0)+vec4(fragmentColor, 1.0))/3;
+      //color = vec4(fragmentColor, 1.0);
 }

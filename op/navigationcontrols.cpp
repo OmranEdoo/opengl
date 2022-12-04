@@ -1,7 +1,7 @@
 #include "navigationcontrols.h"
 //#include "imgui/imgui.h"
 
-NavigationControls::NavigationControls(GLFWwindow* window, Camera* camera, Object* object) : Controls(window, camera, object), lastPosCursor(-1, -1), mode(1)
+NavigationControls::NavigationControls(GLFWwindow* window, Camera* camera, Object* object) : Controls(window, camera, object), lastPosCursor(-1, -1), mode(1), jumpingMode(0)
 {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     mouseSpeed = 0.02;
@@ -103,6 +103,8 @@ void NavigationControls::update(float deltaTime, Shader* shader)
         }
 
         if (getMode() == 3) {
+            //glfwGetCursorPos(m_Window, &xpos, &ypos);
+            //m_Camera->setPositionObject({ xpos, ypos, m_Object->getPosition()[2]});
             // Move forward
             if (glfwGetKey(m_Window, GLFW_KEY_UP) == GLFW_PRESS) {
                 m_Object->setPosition(m_Object->getPosition() + direction * deltaTime * speed);
@@ -144,9 +146,10 @@ void NavigationControls::update(float deltaTime, Shader* shader)
                 m_Camera->setPosition(m_Camera->getPosition() - right * deltaTime * speed);
             }
             // go up
-            if (glfwGetKey(m_Window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-                m_Object->setPosition(m_Object->getPosition() + up * deltaTime * speed);
-                m_Camera->setPosition(m_Camera->getPosition() + up * deltaTime * speed);
+            if (glfwGetKey(m_Window, GLFW_KEY_SPACE) == GLFW_PRESS && getJumpingMode() == 0) {
+                setJumpingMode(1);
+                //m_Object->setPosition(m_Object->getPosition() + up * deltaTime * speed);
+                //m_Camera->setPosition(m_Camera->getPosition() + up * deltaTime * speed);
             }
             // go down
             if (glfwGetKey(m_Window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {

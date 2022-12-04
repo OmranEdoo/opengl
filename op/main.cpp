@@ -234,6 +234,7 @@ int main()
 
     Trajectory trajectory;
 
+    glm::vec3 lastCubePos = o.getPosition();
     glm::vec3 lastCamPos = cam.getPosition();
 
     while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window)) {
@@ -246,7 +247,7 @@ int main()
         lastTime = currentTime;
 
         alpha += 0.01;
-        
+
         controls.update(deltaTime, &shader);
 
         if (controls.getMode() == 2) {
@@ -254,28 +255,70 @@ int main()
             cam.setPosition(trajectory.computePositions(40, alpha - 0.3, mntLayer));
             cam.setPositionObject(o.getPosition());
             cam.lookAtCube();
+
+            int cubeX = o.getPosition()[0];
+            int cubeY = o.getPosition()[1];
+            int cubeZ = o.getPosition()[2];
+
+            int camX = cam.getPosition()[0];
+            int camY = cam.getPosition()[1];
+            int camZ = cam.getPosition()[2];
+
+            if (cubeZ < mntLayer.getVerticesVector()[cubeX + cubeY * mntLayer.getWidthTIFF()][2] + 1 || cubeX <= 0 || cubeY <= 0 || cubeX >= mntLayer.getWidthTIFF() || cubeY >= mntLayer.getHeightTIFF())
+                o.setPosition(lastCubePos);
+            if (camZ <= mntLayer.getVerticesVector()[camX + camY * mntLayer.getWidthTIFF()][2] + 1 || camX <= 0 || camY <= 0 || camX >= mntLayer.getWidthTIFF() || camY >= mntLayer.getHeightTIFF())
+                cam.setPosition(lastCamPos);
         }
-        else if (controls.getMode() == 3){
-            cam.setPosition(o.getPosition() + glm::vec3(10, 10, 0));
+        else if (controls.getMode() == 3) {
+            if (controls.getJumpingMode() == 1) {
+                if (controls.getCountJumping() < controls.getJumpTreshhold()) {
+                    controls.incrCountJumping();
+                    o.setPosition(o.getPosition() + glm::vec3(0, 0, 0.2));
+                }
+                else {
+                    controls.setJumpingMode(2);
+                    controls.setCountJumping(0);
+                }
+            }
+            else if (controls.getJumpingMode() == 2) {
+                if (o.getPosition()[2] >= mntLayer.getVerticesVector()[(int)o.getPosition()[0] + (int)o.getPosition()[1] * mntLayer.getWidthTIFF()][2] + 1.21)
+                    o.setPosition(o.getPosition() + glm::vec3(0, 0, -0.2));
+                else
+                    controls.setJumpingMode(0);
+            }
+            else {
+                int camX = cam.getPosition()[0];
+                int camY = cam.getPosition()[1];
+                int camZ = cam.getPosition()[2];
+
+                o.setPosition({ o.getPosition()[0], o.getPosition()[1], mntLayer.getVerticesVector()[(int)o.getPosition()[0] + (int)o.getPosition()[1] * mntLayer.getWidthTIFF()][2] + 1 });
+                cam.setPosition({ cam.getPosition()[0], cam.getPosition()[1], mntLayer.getVerticesVector()[(int)cam.getPosition()[0] + (int)cam.getPosition()[1] * mntLayer.getWidthTIFF()][2] + 1 });
+            }
+
+            cam.setPosition(o.getPosition() + glm::vec3(0, -10, 2));
             cam.setPositionObject(o.getPosition());
             cam.lookAtCube();
-        } 
-        else {
+        }
+        else { // mode 1
             o.setPosition(trajectory.computePositions(40, alpha, mntLayer));
             cam.computeMatrices(width, height);
+
+            int cubeX = o.getPosition()[0];
+            int cubeY = o.getPosition()[1];
+            int cubeZ = o.getPosition()[2];
+
+            int camX = cam.getPosition()[0];
+            int camY = cam.getPosition()[1];
+            int camZ = cam.getPosition()[2];
+
+            if (cubeZ < mntLayer.getVerticesVector()[cubeX + cubeY * mntLayer.getWidthTIFF()][2] + 1 || cubeX <= 0 || cubeY <= 0 || cubeX >= mntLayer.getWidthTIFF() || cubeY >= mntLayer.getHeightTIFF())
+                o.setPosition(lastCubePos);
+            if (camZ <= mntLayer.getVerticesVector()[camX + camY * mntLayer.getWidthTIFF()][2] + 1 || camX <= 0 || camY <= 0 || camX >= mntLayer.getWidthTIFF() || camY >= mntLayer.getHeightTIFF())
+                cam.setPosition(lastCamPos);
         }
 
         m = mnt.getModelMatrix();
         v = cam.getViewMatrix();
-        p = cam.getProjectionMatrix();
-
-        int camX = cam.getPosition()[0];
-        int camY = cam.getPosition()[1];
-        int camZ = cam.getPosition()[2];
-
-
-        if (camZ <= mntLayer.getVerticesVector()[camX + camY * mntLayer.getWidthTIFF()][2] + 1 || camX <= 0 || camY <= 0 || camX >= mntLayer.getWidthTIFF() || camY >= mntLayer.getHeightTIFF())
-            cam.setPosition(lastCamPos);
 
         mvp = p * v * m;
         shader.setUniformMat4f("MVP", mvp);
@@ -295,6 +338,7 @@ int main()
 
         o.Unbind();       
 
+        lastCubePos = o.getPosition();
         lastCamPos = cam.getPosition();
 
         ////////////////Partie rafraichissement de l'image et des �v�nements///////////////

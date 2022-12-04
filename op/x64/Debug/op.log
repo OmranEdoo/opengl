@@ -4,22 +4,82 @@ D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(104,16): warning C4244: 'argument'
 D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(205,32): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
 D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(205,25): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
 D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(230,20): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
-D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(244,34): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(248,22): warning C4305: '+=' : troncation de 'double' à 'float'
-D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(254,67): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(265,40): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(265,33): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(272,18): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(245,34): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(249,22): warning C4305: '+=' : troncation de 'double' à 'float'
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(255,67): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(259,23): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
           with
           [
               T=float
           ]
-D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(273,18): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(260,23): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
           with
           [
               T=float
           ]
-D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(274,18): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(261,23): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(263,22): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(264,22): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(265,22): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(290,26): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(291,26): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(292,26): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(304,40): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(304,33): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(306,23): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(307,23): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(308,23): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(310,22): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(311,22): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\omran\School\Ing3\opengl\tp\op\op\main.cpp(312,22): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
           with
           [
               T=float

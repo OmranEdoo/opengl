@@ -34,21 +34,25 @@ void LayerRaster::openGeotiff()
 const std::vector<glm::vec3> LayerRaster::normalizeVector(std::vector<glm::vec3> data, int max, int treshhold) {
     
     std::vector<glm::vec3> newData;
+
+    int i = 0;
     
     for (glm::vec3 coordinates : data) {
+
+        i++;
 
         int normalizedValue = coordinates[2] / max * treshhold;
 
         newData.push_back(glm::vec3(coordinates[0], coordinates[1], normalizedValue));
 
         int snowTreshhold = rand() % 6 + 40;
-        int rockTreshhold = rand() % 10 + 32;
+        int rockTreshhold = rand() % 6 + 34;
 
         if (normalizedValue > snowTreshhold) {
-            pushColors({ 0.9f, 0.9f, 0.9f });
+            pushColors({ 1.0f+(1- getUvVector()[i][0]), 1.0f + (1 - getUvVector()[i][0]), 1.0f + (1 - getUvVector()[i][0]) });
         }
         else if (normalizedValue > rockTreshhold) {
-            pushColors({ 0.6f, 0.3f, 0.3f });
+            pushColors({ 0.4f, 0.3f, 0.3f });
         }
         else {
             pushColors({ 0.1f, 0.1f, 0.1f });
